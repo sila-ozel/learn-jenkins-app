@@ -26,7 +26,7 @@ pipeline {
             }
             steps {
                 sh 'test -f ./build/index.html'
-                sh 'npm test && test -f test-results/junit.xml'
+                sh 'npm test && test -f jest-results/junit.xml'
             }
         }
         stage('E2E') {
@@ -48,7 +48,7 @@ pipeline {
     }
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
     }
 
