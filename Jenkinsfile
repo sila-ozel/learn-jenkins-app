@@ -23,9 +23,10 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'test ./build/index.html'
-                sh 'npm test'
+                sh 'test -f ./build/index.html'
+                sh 'npm test && test -f ./test-results/junit.xml'
             }
         }
     }
+
 }
