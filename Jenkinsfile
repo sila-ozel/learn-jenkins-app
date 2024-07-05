@@ -21,5 +21,9 @@ pipeline {
                 sh 'ls -la'
             }
         }
+        stage('Test') {
+            sh 'test ./build/index.html'
+            sh 'npm test'
+        }
     }
 }
