@@ -22,8 +22,10 @@ pipeline {
             }
         }
         stage('Test') {
-            sh 'test ./build/index.html'
-            sh 'npm test'
+            steps {
+                sh 'test ./build/index.html'
+                sh 'npm test'
+            }
         }
     }
 }
