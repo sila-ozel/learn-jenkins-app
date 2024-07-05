@@ -24,13 +24,13 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'test -f ./build/index.html'
-                sh 'npm test && test -f ./test-results/junit.xml'
+                sh 'npm test && test -f test-results/junit.xml'
             }
         }
     }
     post {
         always {
-            junit './test-results/junit.xml'
+            junit 'test-results/junit.xml'
         }
     }
 
