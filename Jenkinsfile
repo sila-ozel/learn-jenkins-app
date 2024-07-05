@@ -2,26 +2,23 @@ pipeline {
     agent {
         docker {
             image 'node:slim'
-            args "-p 3000:3000"
+            reuseNode true
         }
     }
     stages {
         stage('Verify') {
             steps {
                 echo 'Verifying npm version'
-                sh 'npm --version'
+                sh 'node --version && npm --version'
             }
         }
         stage('Build') {
             steps {
                 echo 'Installing dependencies'
-                sh 'npm install'
-            }
-        }
-        stage('Run') {
-            steps {
-                echo 'Starting the development server'
-                sh 'npm start'
+                sh 'npm ci'
+                sh 'ls -la'
+                sh 'npm run build'
+                sh 'ls -la'
             }
         }
     }
