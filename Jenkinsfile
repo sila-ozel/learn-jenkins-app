@@ -17,34 +17,39 @@ pipeline {
                 sh 'ls -la'
             }
         } */
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:slim'
-                    reuseNode true
+        stage('Run Tests') {
+            parallel {
+                stage('Unit Test') {
+                    agent {
+                        docker {
+                            image 'node:slim'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh 'test -f ./build/index.html'
+                        sh 'npm test && test -f jest-results/junit.xml'
+                    }
+                }
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                        npm install serve
+                        node_modules/.bin/serve -s build &
+                        sleep 10
+                        npx playwright test
+                        '''
+                    }
                 }
             }
-            steps {
-                sh 'test -f ./build/index.html'
-                sh 'npm test && test -f jest-results/junit.xml'
-            }
         }
-        stage('E2E') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                npm install serve
-                node_modules/.bin/serve -s build &
-                sleep 10
-                npx playwright test
-                '''
-            }
-        }
+        
     }
     post {
         always {
