@@ -30,6 +30,11 @@ pipeline {
                         sh 'test -f ./build/index.html'
                         sh 'npm test && test -f jest-results/junit.xml'
                     }
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
+                    }
                 }
                 stage('E2E') {
                     agent {
@@ -50,11 +55,6 @@ pipeline {
             }
         }
         
-    }
-    post {
-        always {
-            junit 'jest-results/junit.xml'
-        }
     }
 
 }
